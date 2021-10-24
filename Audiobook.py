@@ -54,7 +54,7 @@ def img_to_text(_file):
 
 
 # Storing file path in variable '_file'
-_file = "UT-II Guidelines for Students.pdf"
+_file = "Sample files/thealchemist2.jpeg"
 
 # Checking whether file is pdf or img and if pdf convert it to image first
 if _file.endswith(".pdf"):
