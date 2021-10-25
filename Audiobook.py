@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pytesseract
 from pdf2image import convert_from_path
+import pyttsx3
 
 # function to convert image to text
 
@@ -15,24 +16,13 @@ def img_to_text(_file):
     plt.imshow(img)
     plt.show()
 
-    text = pytesseract.image_to_string(img)
-    print(text)
     # Let's do some image processing for better OCR
-
-    img = cv2.resize(img, None, fx=.5, fy=0.5)  # resizing the image
-    print(img.shape)
-    fig = plt.figure(figsize=[10, 10])
-    plt.imshow(img)
-    plt.show()
-
     # converting image to grayscale
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     fig = plt.figure(figsize=[10, 10])
 
     plt.imshow(gray, cmap='gray', vmin=0, vmax=255)
     plt.show()
-    text1 = pytesseract.image_to_string(gray)
-    print(text1)
 
     # adaptive thresholding
     adaptive_threshold = cv2.adaptiveThreshold(
@@ -41,20 +31,29 @@ def img_to_text(_file):
     plt.imshow(adaptive_threshold, cmap='gray', vmin=0, vmax=255)
     plt.show()
 
-    text2 = pytesseract.image_to_string(adaptive_threshold)
-    print(text2)
+    text = pytesseract.image_to_string(adaptive_threshold)
+    print(text)
+    string_to_voice(text)
 
     print(type(img))
     print(height, width, channel)
 
     # the output of OCR can be saved in a file
     file = open('output.txt', 'a')  # file opened in append mode
-    file.write(text2)
+    file.write(text)
     file.close()
 
 
+def string_to_voice(text):
+    engine = pyttsx3.init()
+    engine. setProperty("rate", 150)
+    engine.say(text)
+    engine.runAndWait()
+    engine.stop()
+
+
 # Storing file path in variable '_file'
-_file = "Sample files/thealchemist2.jpeg"
+_file = input("enter relative path of file:")
 
 # Checking whether file is pdf or img and if pdf convert it to image first
 if _file.endswith(".pdf"):
